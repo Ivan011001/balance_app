@@ -1,28 +1,20 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:web3dart/web3dart.dart';
 
-import "package:balancer/models/balance_response.dart";
+class BalanceService {
+  static const String _rpcUrl = 'https://eth.llamarpc.com';
+  static final http.Client _client = http.Client();
+  static final Web3Client _ethClient = Web3Client(_rpcUrl, _client);
 
-Future<BalanceResponse> fetchBalance(String address) async {
-  final response = await http.post(Uri.parse('https://eth.llamarpc.com'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        "method": "eth_getBalance",
-        "params": [address, "latest"],
-        "id": 1,
-        "jsonrpc": "2.0"
-      }));
-
-  if (response.statusCode == HttpStatus.accepted ||
-      response.statusCode == HttpStatus.ok ||
-      response.statusCode == HttpStatus.created) {
-    return BalanceResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>);
-  } else {
-    throw Exception('Failed to get balance.');
+  static Future<String> fetchBalance(EthereumAddress address) async {
+    try {
+      final balanceInWei = await _ethClient.getBalance(address);
+      final balance = balanceInWei.getValueInUnit(EtherUnit.ether).toString();
+      return balance;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

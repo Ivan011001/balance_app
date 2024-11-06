@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:web3dart/web3dart.dart';
 
-import 'package:balancer/models/balance_response.dart';
 import 'package:balancer/services/balance_service.dart';
 
 class MyAppState extends ChangeNotifier {
-  Future<BalanceResponse>? balance;
+  Future<String>? balance;
 
-  void getBalance(String address) {
-    balance = fetchBalance(address.trim());
+  void getBalance(EthereumAddress address) {
+    balance = BalanceService.fetchBalance(address);
     notifyListeners();
   }
 }

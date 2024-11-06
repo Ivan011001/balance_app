@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:balancer/models/balance_response.dart';
-import 'package:balancer/utils/converter.dart';
-
 class UserBalance extends StatelessWidget {
   const UserBalance({super.key, required this.balance});
 
-  final Future<BalanceResponse>? balance;
+  final Future<String>? balance;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +16,7 @@ class UserBalance extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator.adaptive();
             } else if (snapshot.hasData) {
-              BigInt decValue = Converter.fromHex(snapshot.data!.result);
-              String value = Converter.fromWei(decValue);
-
-              return Text("$value ETH");
+              return Text("${snapshot.data} ETH");
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
