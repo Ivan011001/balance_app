@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:balancer/providers/app_state.dart';
 import 'package:balancer/widgets/user_balance.dart';
 import 'package:balancer/widgets/user_form.dart';
+import 'package:balancer/widgets/chain_select.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
@@ -23,12 +24,15 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            UserBalance(balance: appState.balance),
+            UserBalance(tokenWithBalances: appState.tokenWithBalances),
             const SizedBox(height: 100),
-            UserForm(getBalance: appState.getBalance),
+            UserForm(getBalances: appState.getBalances),
           ],
         ),
       ),
+      floatingActionButton: ChainSelect(
+          chainId: appState.chainId, changeChain: appState.changeChain),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
   }
 }

@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
 
-class UserBalance extends StatelessWidget {
-  const UserBalance({super.key, required this.balance});
+import 'package:balancer/constants/token.dart';
 
-  final Future<String>? balance;
+class UserBalance extends StatelessWidget {
+  const UserBalance({super.key, required this.tokenWithBalances});
+
+  final Future<List<TokenWithBalance>>? tokenWithBalances;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text('Your balance is:'),
+        const Text('Your balances:'),
         FutureBuilder(
-          future: balance,
+          future: tokenWithBalances,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator.adaptive();
             } else if (snapshot.hasData) {
-              return Text("${snapshot.data} ETH");
+              return Column(
+                children: [
+                  for (var token in snapshot.data!)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(token.symbol),
+                        const Text(' - '),
+                        Text(token.balance),
+                      ],
+                    ),
+                ],
+              );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }

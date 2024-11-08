@@ -5,9 +5,9 @@ import "package:balancer/constants/address_error_messages.dart";
 import 'package:web3dart/web3dart.dart';
 
 class UserForm extends StatefulWidget {
-  const UserForm({super.key, required this.getBalance});
+  const UserForm({super.key, required this.getBalances});
 
-  final dynamic getBalance;
+  final dynamic getBalances;
 
   @override
   State<UserForm> createState() => _UserFormState();
@@ -48,14 +48,11 @@ class _UserFormState extends State<UserForm> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // Convert the address to EthereumAddress
                 try {
                   EthereumAddress address =
                       EthereumAddress.fromHex(_controller.text.trim());
-                  // Pass the EthereumAddress to the getBalance function
-                  widget.getBalance(address);
+                  widget.getBalances(address);
                 } catch (e) {
-                  // Handle invalid address error, if necessary
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Invalid Ethereum address.')),
                   );
